@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<style>
+    body {
+                background-color: orange;
+                color: white;
+            }
+            h1 {
+                margin-top: 10rem;
+            }
+            form {
+                margin-bottom: 2rem;
+            }
+            .ul {
+                border-top: 1px solid white;
+                padding-top: 20px;
+            }
+
+            .li {
+                padding-left: 5px;
+                margin-bottom: 5px;
+                list-style-type: none;
+            }
+            img{
+                border-radius: 50%;
+                margin-right: 10px;
+                height: 42px;
+                width: 42px;
+            }
+            a{
+                color: white;
+                font-weight: bold;
+            }
+            a:hover{
+                color: #e3f2fd;
+                font-weight: bold;
+                text-decoration: none;
+            }
+
+        .row{
+            display: flex;
+            justify-content: center;
+            background-color: white;
+        }
+</style> 
+
+    
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- 1st Part : Form -->
+        <div class="container-fluid">
+            <row>
+                <h1 class="text-center">Enter your contact</h1>
+                <form class="col-xs-12 col-md-6 mx-auto" action="/newContact" method="POST" enctype="multipart/form-data">
+                    <div class="input-group mb-1">
+                        <div class="input-group-prepend"></div>
+                        <div class="input-group-text">...</div><input class="form-control" type="text" name="name" placeholder="Enter your contact's name" /></div>
+                    <div class="input-group mb-1">
+                        <div class="input-group-prepend"></div>
+                        <div class="input-group-text">@</div><input class="form-control" type="email" name="email" placeholder="Enter your contact's e-mail" /></div>
+                    <div class="input-group mb-1"><label class="custom-file-label" for="avatar">Choose file</label><input class="custom-file-input" id="avatar" type="file" name="avatar" multiple="multiple" /></div>
+                    <div class="input-group"><button class="btn btn-primary btn-block" type="submit">Submit</button></div>
+                </form>
+            </row>
+        </div>
+
+        <!-- 2 -->
+
+        <div class="row">
+          <!--FORM-->
+ <!--          <div class="col-md-5">
+            <div class="card">
+              <div class="card-body">
+                <form action="/add" method="post">
+                  <div class="form-group">
+                    <input class="form-control" type="text" name="title" placeholder="Title">
+                  </div>
+                  <div class="form-group">
+                    <textarea class="form-control" name="description" cols="80"
+                      placeholder="Add a Description"
+                      ></textarea>
+                  </div>
+                  <button class="btn btn-primary" type="submit">
+                    Add
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div> -->
+      
+          <!-- 2nd Part: Table -->
+
+          <!-- LIST -->
+          <div class="col-md-12">
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th>N°</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Avatar</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% for(var i=0; i < contactData.length; i++) { %>
+                  <tr>
+
+                    <td><%= i + 1%></td>
+
+                    <td><strong><%= contactData[i].name %></strong></td>
+
+                    <td><%= contactData[i].mail %></td>
+
+                    <td>
+                        <img src="/uploads/avatars/<%= contactData[i].avatar %>"/>
+                      <!--   <strong><%= contactData[i].avatar %></strong> -->
+                    </td>
+            
+                    <td>
+
+                      <a
+                        class="<%= contactData[i].status ? 'btn btn-danger' : 'btn btn-success'%>"
+                        href="/turn1/<%= contactData[i]._id %>">Send ✉</a>
+
+                      <a href="/deleteContact/<%= contactData[i]._id %>"
+                        class="btn btn-dark">
+                        Delete ❌
+                      </a>
+
+                      <a href="/update/<%= contactData[i]._id %>" class="btn btn-info" >
+                        Edit ✏
+                      </a>
+
+                    </td>
+                  </tr>
+                <% } %>
+              </tbody>
+            </table>
+      
+          </div>
+        </div>
+      
+      </div>
+
+      <!-- MAIL -->
+
+      <div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header"><img class="float-left" id="userImg" />
+                    <h5 class="modal-title text-primary" id="modalHeader"></h5><button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                <div class="modal-body">
+                    <form class="container" action="/sendMail" method="POST" enctype="multipart/form-data">
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">to</div>
+                            </div><input class="form-control" id="to" type="email" name="to" /></div>
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">@</div>
+                            </div><input class="form-control" type="email" name="cc" placeholder="CC address" /></div>
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">...</div>
+                            </div><input class="form-control" type="text" name="subject" placeholder="Mail Subject" /></div>
+                        <div class="input-group mb-2"><textarea class="form-control" rows="3" name="message"></textarea></div>
+                        <div class="input-group mb-2"><label class="custom-file-label" for="attach">Choose File</label><input class="custom-file-input" id="attach" type="file" name="attach" /></div>
+                        <hr/>
+                        <div class="input-group mb-2" id="userDiv">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">@</div>
+                            </div><input class="form-control" type="email" name="user" placeholder="Your G-mail address" /></div>
+                        <div class="input-group mb-2" id="passDiv">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text"> * </div>
+                            </div><input class="form-control" type="password" name="pass" placeholder="Your G-mail password" /></div>
+                        <hr/>
+                        <div class="input-group mb-2"><button class="btn btn-primary btn-block" type="submit">Send</button></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <h5 class="text-center m-auto text-primary">© 2020 Alper</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EDIT -->
+
+    <!-- Modal-->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header"><img class="userImg float-left" />
+                <h5 class="name modal-title text-primary"></h5><button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+            <div class="modal-body">
+                <form class="col-xs-12 col-md-10 mx-auto" action="/newContact" method="POST" enctype="multipart/form-data">
+                    <div class="input-group mb-1">
+                        <div class="input-group-prepend"></div>
+                        <div class="input-group-text">...</div><input class="name form-control" type="text" name="name" placeholder="Enter your contact's name" /></div>
+                    <div class="input-group mb-1">
+                        <div class="input-group-prepend"></div>
+                        <div class="input-group-text">@</div><input class="mail form-control" type="email" name="email" placeholder="Enter your contact's e-mail" /></div>
+                    <div class="input-group mb-1"><label class="custom-file-label" for="avatar">Choose file</label><input class="custom-file-input" id="avatar" type="file" name="avatar" multiple="multiple" /></div>
+                    <div class="input-group"><button class="btn btn-primary btn-block" type="submit">Submit</button></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <h5 class="text-center m-auto text-primary">© 2020 Alper</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let mailPopUp = (photo, name, mail) => {
+          $('.mail').val(mail);
+          $('.name').text(name).val(name);
+          $('.userImg').attr('src',"/uploads/avatars/" + photo);
+          
+          
+          console.log(name)
+          }
+</script>
+    
+</body>
+</html>
